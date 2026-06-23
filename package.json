@@ -1,0 +1,29 @@
+{
+  "name": "telev4",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TeleV4 — Telehealth Marketplace Platform (Monorepo)",
+  "workspaces": ["mobile", "backend"],
+  "scripts": {
+    "dev:mobile": "cd mobile && npm run start",
+    "dev:backend": "cd backend && npm run start:dev",
+    "lint": "cd mobile && npx eslint . --ext .ts,.tsx && cd ../backend && npx eslint . --ext .ts",
+    "format": "cd mobile && npx prettier --write . && cd ../backend && npx prettier --write .",
+    "build:mobile": "cd mobile && npx expo export",
+    "build:backend": "cd backend && npm run build",
+    "test": "cd mobile && npm test && cd ../backend && npm test",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "husky": "^9.0.0",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0"
+  }
+}
