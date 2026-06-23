@@ -13,10 +13,7 @@ const getBaseUrl = (): string => {
 
 export const API_BASE_URL = getBaseUrl();
 
-export async function apiFetch<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
+export async function apiFetch<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
   const response = await fetch(url, {
     ...options,

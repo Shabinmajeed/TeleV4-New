@@ -27,9 +27,7 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "scheme": "tele-v4",
     "experiments": {
       "typedRoutes": true
