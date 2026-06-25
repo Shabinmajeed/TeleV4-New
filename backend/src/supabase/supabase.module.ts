@@ -1,9 +1,11 @@
 import { Injectable, OnModuleInit, Global, Module } from '@nestjs/common';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from './supabase.service';
+import { DatabaseModule } from '../database/database.module';
 
 @Global()
 @Module({
+  imports: [DatabaseModule],
   providers: [
     {
       provide: 'SUPABASE_CLIENT',

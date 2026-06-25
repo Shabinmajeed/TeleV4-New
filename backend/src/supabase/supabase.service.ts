@@ -1,10 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { DatabaseService } from '../database/database.service';
 
 @Injectable()
 export class SupabaseService {
   constructor(
     @Inject('SUPABASE_CLIENT') private readonly supabase: SupabaseClient,
+    private readonly database: DatabaseService,
   ) {}
 
   /**
@@ -14,9 +16,8 @@ export class SupabaseService {
     return this.supabase;
   }
 
-  /**
-   * Auth helpers
-   */
+  // ─── Auth Helpers (Supabase Auth) ──────────────────────────────
+
   async signUpWithEmail(email: string, password: string) {
     return this.supabase.auth.signUp({ email, password });
   }
@@ -25,7 +26,7 @@ export class SupabaseService {
     return this.supabase.auth.signInWithPassword({ email, password });
   }
 
-  async signOut(jwt: string) {
+  async signOut() {
     const { error } = await this.supabase.auth.signOut();
     return { error };
   }
@@ -34,48 +35,23 @@ export class SupabaseService {
     return this.supabase.auth.getUser(jwt);
   }
 
-  /**
-   * Database helpers (PostgREST)
-   */
-  async find(table: string, query?: Record<string, any>) {
-    let builder = this.supabase.from(table).select('*');
-    if (query) {
-      Object.entries(query).forEach(([key, value]) => {
-        builder = builder.eq(key, value);
-      });
-    }
-    return builder;
+  async refreshSession(refreshToken: string) {
+    return this.supabase.auth.refreshSession({ refresh_token: refreshToken });
   }
 
-  async findOne(table: string, query: Record<string, any>) {
-    return this.supabase.from(table).select('*').match(query).single();
+  // ─── Database Helpers (Type-safe via Prisma) ───────────────────
+
+  get db() {
+    return this.database;
   }
 
-  async insert(table: string, data: any) {
-    return this.supabase.from(table).insert(data).select();
-  }
+  // ─── Storage Helpers (Supabase Storage) ────────────────────────
 
-  async update(table: string, data: any, query: Record<string, any>) {
-    let builder = this.supabase.from(table).update(data);
-    Object.entries(query).forEach(([key, value]) => {
-      builder = builder.eq(key, value);
+  async uploadFile(bucket: string, path: string, file: Buffer, contentType?: string) {
+    return this.supabase.storage.from(bucket).upload(path, file, {
+      contentType,
+      upsert: true,
     });
-    return builder.select();
-  }
-
-  async delete(table: string, query: Record<string, any>) {
-    let builder = this.supabase.from(table).delete();
-    Object.entries(query).forEach(([key, value]) => {
-      builder = builder.eq(key, value);
-    });
-    return builder;
-  }
-
-  /**
-   * Storage helpers
-   */
-  async uploadFile(bucket: string, path: string, file: File | Buffer) {
-    return this.supabase.storage.from(bucket).upload(path, file);
   }
 
   async getPublicUrl(bucket: string, path: string) {
@@ -84,5 +60,9 @@ export class SupabaseService {
 
   async deleteFile(bucket: string, paths: string[]) {
     return this.supabase.storage.from(bucket).remove(paths);
+  }
+
+  async listFiles(bucket: string, path?: string) {
+    return this.supabase.storage.from(bucket).list(path);
   }
 }
