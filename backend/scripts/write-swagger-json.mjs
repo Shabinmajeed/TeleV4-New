@@ -3,7 +3,7 @@
  * write-swagger-json.mjs
  * Boots the NestJS app silently, extracts the Swagger document,
  * and writes it to ../swagger.json for orval codegen.
- * 
+ *
  * Sets minimal placeholder env vars to pass validation — these are
  * only used for swagger generation, not actual DB/Supabase operations.
  */
