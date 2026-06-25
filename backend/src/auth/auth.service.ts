@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -17,10 +18,10 @@ export class AuthService {
     };
   }
 
-  async register(email: string, password: string, role?: string) {
+  async register(email: string, password: string, role?: Role) {
     // TODO: Implement registration with password hashing
     const user = await this.prisma.user.create({
-      data: { email, password, role: (role as string) || 'PATIENT' },
+      data: { email, password, role: role ?? Role.PATIENT },
     });
     return {
       message: 'Registration endpoint - implementation pending',
