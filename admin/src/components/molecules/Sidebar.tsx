@@ -11,7 +11,7 @@ const navSections = [
     items: [
       { href: '/dashboard', label: 'Dashboard', icon: 'grid' },
       { href: '/therapist', label: 'Therapist', icon: 'user' },
-      { href: '/clients', label: 'Clients', icon: 'users' },
+      { href: '/dashboard/clients', label: 'Clients', icon: 'users' },
     ],
   },
   {
